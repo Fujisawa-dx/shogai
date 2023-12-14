@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>CSVテーブル表示</title>
+</head>
+<body>
+  <label for="filter1">障がい者手帳詳細：</label>
+  <select id="filter1">
+    <option value="">全て</option>
+    <option value="視覚障がい">視覚</option>
+    <option value="聴覚平衡機能障がい">聴覚平衡機能</option>
+    <option value="音声言語・そしゃく機能障がい">音声言語・そしゃく機能</option>
+    <option value="肢体不自由">肢体不自由</option>
+    <option value="内部障がい　　　　※">内部障がい</option>
+    <option value="療育手帳">療育手帳</option>
+    <option value="精神障がい者保健福祉手帳">精神障がい者保健福祉手帳</option>-->
+  </select><br><br>
+
+  <label for="filter2">等級：</label>
+  <select id="filter2">
+    <option value="">全て</option>
+    <option value="1級">１級</option>
+    <option value="2級">２級</option>
+    <option value="3級">３級</option>
+    <option value="4級">４級</option>
+    <option value="5級">５級</option>
+    <option value="6級">６級</option>
+    <option value="7級">７級</option>
+    <option value="A1">Ａ１</option>
+    <option value="A2">Ａ２</option>
+    <option value="B1">Ｂ１</option>
+    <option value="B2">Ｂ２</option>-->
+  </select><br><br>
+
+  <label for="filter3">サービス種別：</label>
+  <select id="filter3">
+    <option value="">全て</option>
+    <option value="医療">医療</option>
+    <option value="補装具　他">補装具　他</option>
+    <option value="住宅">住宅</option>
+    <option value="情報・伝達支援">情報・伝達支援</option>
+    <option value="社会参加支援">社会参加支援</option>
+    <option value="手当・年金等">手当・年金等</option>
+    <option value="公共料金の割引">公共料金の割引</option>
+    <option value="税金の控除">税金の控除</option>
+    <option value="就労・雇用">就労・雇用</option>
+    <option value="スポーツ・文化施設">スポーツ・文化施設</option>-->
+  </select><br><br>
+
+  <table id="data-table" border="1">
+    <!-- テーブルデータはここに表示されます -->
+  </table>
+
+  <script>
+    fetch('your_csv_file.csv')
+      .then(response => response.text())
+      .then(data => processData(data));
+
+    function processData(csvData) {
+      const rows = csvData.split('\n').map(row => row.split(','));
+      const headers = rows[0];
+
+      const selectOptions = {};
+
+      for (let i = 1; i < rows.length; i++) {
+        const data = rows[i];
+
+        for (let j = 0; j < headers.length; j++) {
+          // 選択肢を取得し、重複を除いてセレクトボックスに追加
+          if (i === 1 && !selectOptions[headers[j]]) {
+            selectOptions[headers[j]] = new Set();
+          }
+          if (i > 0) {
+            selectOptions[headers[j]].add(data[j]);
+          }
+        }
+      }
+
+      // フィルター用のセレクトボックスに選択肢を追加
+      //for (const key in selectOptions) {
+      //  if (Object.hasOwnProperty.call(selectOptions, key)) {
+      //    const select = document.getElementById('filter' + (headers.indexOf(key) + 1));
+      //    selectOptions[key].forEach(option => {
+      //      const newOption = document.createElement('option');
+      //      newOption.value = option;
+      //      newOption.textContent = option;
+      //      select.appendChild(newOption);
+      //    });
+      //  }
+      //}
+
+      // テーブルにデータを表示
+      const table = document.getElementById('data-table');
+      for (let i = 0; i < rows.length; i++) {
+        const row = document.createElement('tr');
+
+        for (let j = 0; j < headers.length; j++) {
+          const cell = document.createElement('td');
+          cell.textContent = rows[i][j];
+          row.appendChild(cell);
+        }
+
+        table.appendChild(row);
+      }
+
+      // フィルタリング処理
+      const filter1 = document.getElementById('filter1');
+      const filter2 = document.getElementById('filter2');
+      const filter3 = document.getElementById('filter3');
+
+      filter1.addEventListener('change', applyFilters);
+      filter2.addEventListener('change', applyFilters);
+      filter3.addEventListener('change', applyFilters);
+
+      function applyFilters() {
+        const tableRows = table.getElementsByTagName('tr');
+
+        for (let i = 1; i < tableRows.length; i++) {
+          const row = tableRows[i];
+          const cells = row.getElementsByTagName('td');
+          const detail = cells[1].textContent;
+          const grade = cells[2].textContent;
+          const serviceType = cells[3].textContent;
+
+          const filterDetail = filter1.value;
+          const filterGrade = filter2.value;
+          const filterServiceType = filter3.value;
+
+          if (
+            (filterDetail === '' || detail === filterDetail) &&
+            (filterGrade === '' || grade === filterGrade) &&
+            (filterServiceType === '' || serviceType === filterServiceType)
+          ) {
+            row.style.display = '';
+          } else {
+            row.style.display = 'none';
+          }
+        }
+      }
+    }
+  </script>
+</body>
+</html>
