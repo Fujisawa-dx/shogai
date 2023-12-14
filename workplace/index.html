@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>マップ表示</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/leaflet.css" />
+    <style>
+        #map {
+            height: 400px;
+            width: 100%;
+        }
+    </style>
+</head>
+<body>
+    <div>
+        <select id="target">
+            <option value="生活介護">生活介護</option>
+            <option value="自立訓練">自立訓練</option>
+            <option value="就労移行支援">就労移行支援</option>
+            <option value="就労継続Ａ型">就労継続Ａ型</option>
+            <option value="就労継続Ｂ型">就労継続Ｂ型</option>
+            <option value="日中一時支援">日中一時支援</option>
+            <option value="地域活動支援センターⅢ型">地域活動支援センターⅢ型</option>
+        </select>
+    </div>
+    <div id="map"></div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/leaflet.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>
